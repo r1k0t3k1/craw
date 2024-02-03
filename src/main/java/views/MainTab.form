@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="main.java.views.MainTab">
+  <grid id="27dc6" binding="panel" custom-create="true" layout-manager="GridBagLayout">
+    <constraints>
+      <xy x="131" y="20" width="494" height="414"/>
+    </constraints>
+    <properties>
+      <alignmentX value="1.0"/>
+      <alignmentY value="1.0"/>
+      <autoscrolls value="false"/>
+      <preferredSize width="5000" height="5000"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <component id="8982b" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="0" column="0" row-span="2" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="5" left="5" bottom="5" right="0" weightx="0.02" weighty="0.05"/>
+        </constraints>
+        <properties>
+          <font size="22"/>
+          <text value="Request name: "/>
+        </properties>
+      </component>
+      <component id="1834e" class="javax.swing.JComboBox" binding="requestNameComboBox" custom-create="true">
+        <constraints>
+          <grid row="0" column="1" row-span="2" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="5" left="0" bottom="5" right="5" weightx="1.0" weighty="0.05"/>
+        </constraints>
+        <properties>
+          <editable value="true"/>
+          <font size="22"/>
+        </properties>
+      </component>
+      <component id="4e14" class="javax.swing.JButton" binding="settingButton" custom-create="true">
+        <constraints>
+          <grid row="0" column="2" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag top="5" left="5" bottom="5" right="5" weightx="0.05" weighty="0.05"/>
+        </constraints>
+        <properties>
+          <font size="28"/>
+          <inheritsPopupMenu value="true"/>
+          <label value="⚙"/>
+          <text value="⚙"/>
+        </properties>
+      </component>
+      <component id="a2f08" class="javax.swing.JToggleButton" binding="proxySwitchButton" custom-create="true">
+        <constraints>
+          <grid row="0" column="3" row-span="2" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.05" weighty="0.05"/>
+        </constraints>
+        <properties>
+          <font size="26"/>
+          <label value="Passing..."/>
+          <text value="Passing..."/>
+        </properties>
+      </component>
+      <nested-form id="36258" form-file="main/java/views/ProxyLogPanel.form" binding="proxyLogPanel" custom-create="true">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="4" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+      </nested-form>
+    </children>
+  </grid>
+</form>
