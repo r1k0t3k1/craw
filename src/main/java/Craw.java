@@ -2,13 +2,10 @@ package main.java;
 
 import burp.api.montoya.BurpExtension;
 import burp.api.montoya.MontoyaApi;
-import com.sun.tools.javac.Main;
 import main.java.controllers.MainTabController;
 import main.java.controllers.ProxyLogPanelController;
 import main.java.models.OptionsModel;
 import main.java.models.ProxyLogTableModel;
-import main.java.views.MainTab;
-import main.java.views.ProxyLogPanel;
 
 public class Craw implements BurpExtension {
     @Override

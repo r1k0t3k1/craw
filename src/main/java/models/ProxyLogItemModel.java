@@ -1,112 +1,202 @@
 package main.java.models;
 
 import java.awt.*;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.UUID;
 import java.util.Date;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.ArrayList;
 
+import burp.api.montoya.http.HttpService;
 import burp.api.montoya.http.message.Cookie;
 import burp.api.montoya.http.message.MimeType;
 import burp.api.montoya.http.message.requests.HttpRequest;
 import burp.api.montoya.http.message.responses.HttpResponse;
 import burp.api.montoya.http.handler.HttpResponseReceived;
+import org.apache.commons.compress.utils.FileNameUtils;
 
 
 public class ProxyLogItemModel {
-  public HttpResponseReceived httpResponse;
+  private final HttpRequest request;
+  private final HttpResponse response;
+  private final HttpService service;
+  private final String url;
   public UUID id;
-
   public int order;
-
   public String requestName;
-
-  public String host;
-
-  public String method;
-
-  public String url;
-
-  public int paramCount;
-
-  public short statusCode;
-
-  public int responseSize;
-
-  public MimeType mimeType;
-
-  public String extension;
-
   public String note;
-
-  public boolean isSecure;
-
-  public List<Cookie> cookies;
-
   public Date time;
-
   public boolean isTarget;
-
   public boolean isCommit;
-
-  public LinkedList<Integer> duplicateRequests;
-
-  public LinkedList<Integer> similarRequests;
-
-  public Color color = null;
+  public List<Integer> duplicateRequests;
+  public List<Integer> similarRequests;
+  public Color color;
 
   public ProxyLogItemModel(int order) {
     this.id = UUID.randomUUID();
     this.order = order;
+    this.request = HttpRequest.httpRequest();
+    this.response = HttpResponse.httpResponse();
+    this.service = HttpService.httpService("http://", 0, false);
+    this.url = "http://";
     this.requestName = "";
-    this.host = "";
-    this.method = "";
-    this.url = "https://";
-    this.paramCount = 0;
-    this.statusCode = 0;
-    this.responseSize = 0;
-    this.mimeType = MimeType.NONE;
-    this.extension = "";
     this.note = "";
-    this.isSecure = false;
-    this.cookies = new ArrayList();
     this.time = new Date();
     this.isTarget = false;
     this.isCommit = false;
-    this.duplicateRequests = new LinkedList<Integer>();
-    this.similarRequests = new LinkedList<Integer>();
+    this.duplicateRequests = new ArrayList<Integer>();
+    this.similarRequests = new ArrayList<Integer>();
+    this.color = null;
   }
 
   public ProxyLogItemModel(int order, String requestName, HttpResponseReceived response) {
-    this.httpResponse = response;
-    var request = this.httpResponse.initiatingRequest();
+    this.response = response;
+    this.request = response.initiatingRequest();
+    this.service = response.initiatingRequest().httpService();
+    this.url = response.initiatingRequest().url();
     this.id = UUID.randomUUID();
     this.order = order;
     this.requestName = requestName;
-    this.host = request.httpService().host();
-    this.method = request.method();
-    this.url = request.url();
-    this.paramCount = request.parameters().size();
-    this.statusCode = response.statusCode();
-    this.responseSize = response.toByteArray().length();
-    this.mimeType = response.mimeType();
-    this.extension = request.url(); //request.fileExtension();
     this.note = "";
-    this.isSecure = request.httpService().secure();
-    this.cookies = response.cookies();
     this.time = new Date();
     this.isTarget = false;
     this.isCommit = false;
     this.duplicateRequests = new LinkedList<Integer>();
     this.similarRequests = new LinkedList<Integer>();
+    this.color = null;
   }
 
+  public ProxyLogItemModel(
+          HttpRequest request,
+          HttpResponse response,
+          HttpService service,
+          String url,
+          String id,
+          int order,
+          String requestName,
+          String note,
+          String time,
+          boolean isTarget,
+          boolean isCommit,
+          Color color,
+          List<Integer> duplicateRequests,
+          List<Integer> similarRequests
+
+  ) {
+    this.request = request;
+    this.response = response;
+    this.service = service;
+    this.url = url;
+    this.id = UUID.fromString(id);
+    this.order = order;
+    this.requestName = requestName;
+    this.note = note;
+    try {
+      this.time = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").parse(time);
+    } catch (Exception e) {
+      this.time = new Date();
+    }
+    this.isTarget = isTarget;
+    this.isCommit = isCommit;
+    this.duplicateRequests = duplicateRequests;
+    this.similarRequests = similarRequests;
+    this.color = color;
+
+  }
+
+  public UUID getId() {
+    return id;
+  }
+  public int getOrder() {
+    return order;
+  }
+  public String getRequestName() {
+    return requestName;
+  }
+  public String getHost() {
+    return this.service.host();
+  }
+  public int getPort() {
+    return this.service.port();
+  }
+  public String getUrl() {
+    return url;
+  }
+  public String getMethod() {
+    return this.request.method();
+  }
+  public String getPath() {
+    try {
+      URL url = new URL(this.request.url());
+      return url.getPath();
+    } catch (Exception e) {
+      try {
+        return new URL(this.url).getPath();
+      } catch (Exception e2) {
+        return "";
+      }
+    }
+  }
+  public int getParamCount() {
+    return this.request.parameters().size();
+  }
+  public short getStatusCode() {
+    return this.response.statusCode();
+  }
+  public int getResponseSize() {
+    return this.response.toByteArray().length();
+  }
+
+  public MimeType getMimeType() {
+    return this.response.mimeType();
+  }
+  public String getExtension() {
+    try {
+      URL url = new URL(this.request.url());
+      return FileNameUtils.getExtension(url.getPath());
+    } catch (Exception e) {
+      return "";
+    }
+  }
+  public String getNote() {
+    return this.note;
+  }
+  public boolean isSecure() {
+    return this.service.secure();
+  }
+  public List<Cookie> getCookies() {
+    return this.response.cookies();
+  }
+  public Date getTime() {
+    return this.time;
+  }
+  public boolean isTarget() {
+    return this.isTarget;
+  }
+  public void setTarget(boolean target) {
+    isTarget = target;
+  }
+  public boolean isCommit() {
+    return this.isCommit;
+  }
+  public void setCommit(boolean commit) {
+    isCommit = commit;
+  }
+  public List<Integer> getDuplicateRequests() {
+    return this.duplicateRequests;
+  }
+  public List<Integer> getSimilarRequests() {
+    return this.similarRequests;
+  }
+  public Color getColor() {
+    return this.color;
+  }
   public HttpRequest getHttpRequest() {
-    return this.httpResponse.initiatingRequest();
+    return this.request;
   }
-
   public HttpResponse getHttpResponse() {
-    return this.httpResponse;
+    return this.response;
   }
 }

@@ -3,6 +3,8 @@ package main.java.utils;
 import burp.api.montoya.MontoyaApi;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,6 +49,7 @@ public class Compresser {
                     out.write(buffer, 0, n);
                 }
             }
+
             return out.toByteArray();
         } catch (IOException e) {
             throw new RuntimeException("SevenZ decompress error", e);

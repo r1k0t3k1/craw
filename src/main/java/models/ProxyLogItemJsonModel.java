@@ -1,19 +1,16 @@
 package main.java.models;
 
-import burp.api.montoya.http.handler.HttpResponseReceived;
-import burp.api.montoya.http.message.HttpRequestResponse;
+import burp.api.montoya.http.message.Cookie;
 import burp.api.montoya.http.message.MimeType;
-import burp.api.montoya.http.message.requests.HttpRequest;
 import burp.api.montoya.http.message.responses.HttpResponse;
 
 import java.awt.*;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
 public class ProxyLogItemJsonModel {
-    private final HttpResponseReceived httpResponse;
+    private final HttpResponse httpResponse;
     private final UUID id;
 
     private final int order;
@@ -40,7 +37,7 @@ public class ProxyLogItemJsonModel {
 
     private final boolean isSecure;
 
-    //private List<Cookie> cookies;
+    private final List<Cookie> cookies;
 
     private final Date time;
 
@@ -55,27 +52,28 @@ public class ProxyLogItemJsonModel {
     private Color color = null;
 
     public ProxyLogItemJsonModel(ProxyLogItemModel itemModel) {
-        this.httpResponse = itemModel.httpResponse;
+        this.httpResponse = itemModel.getHttpResponse();
         this.id = itemModel.id;
         this.order = itemModel.order;
         this.requestName = itemModel.requestName;
-        this.host = itemModel.host;
-        this.method = itemModel.method;
-        this.url = itemModel.url;
-        this.paramCount = itemModel.paramCount;
-        this.statusCode = itemModel.statusCode;
-        this.responseSize = itemModel.responseSize;
-        this.mimeType = itemModel.mimeType;
-        this.extension = itemModel.extension;
-        this.note = itemModel.note;
-        this.isSecure = itemModel.isSecure;
-        this.time = itemModel.time;
-        this.isTarget = itemModel.isTarget;
-        this.isCommit = itemModel.isCommit;
-        this.color = itemModel.color;
+        this.host = itemModel.getHost();
+        this.method = itemModel.getMethod();
+        this.url = itemModel.getPath();
+        this.paramCount = itemModel.getParamCount();
+        this.statusCode = itemModel.getStatusCode();
+        this.responseSize = itemModel.getResponseSize();
+        this.mimeType = itemModel.getMimeType();
+        this.extension = itemModel.getExtension();
+        this.note = itemModel.getNote();
+        this.isSecure = itemModel.isSecure();
+        this.cookies = itemModel.getCookies();
+        this.time = itemModel.getTime();
+        this.isTarget = itemModel.isTarget();
+        this.isCommit = itemModel.isCommit();
+        this.color = itemModel.getColor();
     }
 
-    public HttpResponseReceived getHttpResponse() {
+    public HttpResponse getHttpResponse() {
         return httpResponse;
     }
 
@@ -129,6 +127,9 @@ public class ProxyLogItemJsonModel {
 
     public boolean isSecure() {
         return isSecure;
+    }
+    public List<Cookie> getCookies() {
+        return cookies;
     }
 
     public boolean isTarget() {

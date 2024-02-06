@@ -11,10 +11,10 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 public class ProxyLogPanel {
     private final MontoyaApi api;
@@ -99,6 +99,19 @@ public class ProxyLogPanel {
             }
 
             @Override
+            public Class getColumnClass(int column) {
+                return switch (column) {
+                    case 2, 3, 7, 8, 15 -> Boolean.class;
+                    default -> String.class;
+                };
+            }
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return IntStream.of(2, 3, 7, 8, 15).anyMatch(x -> x == column);
+            }
+
+            @Override
             public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
                 super.changeSelection(rowIndex, columnIndex, toggle, extend);
                 var proxyLogItem = tableModel.getRow(rowIndex);
@@ -106,6 +119,12 @@ public class ProxyLogPanel {
                 responseEditor.setResponse(proxyLogItem.getHttpResponse());
             }
         };
+
+        for (int i = 0; i < proxyLogTable.getColumnCount(); i++) {
+            proxyLogTable.getColumnModel().getColumn(i).setPreferredWidth(tableModel.getColumnWidth(i));
+        }
+
+
         proxyLogTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

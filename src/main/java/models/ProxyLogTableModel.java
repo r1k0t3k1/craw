@@ -2,26 +2,25 @@ package main.java.models;
 
 import burp.api.montoya.MontoyaApi;
 import burp.api.montoya.http.handler.HttpResponseReceived;
-import com.google.gson.Gson;
 import main.java.utils.JsonConverter;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 public class ProxyLogTableModel extends AbstractTableModel
 {
-    private final ArrayList<ProxyLogItemModel> log;
+    private final List<ProxyLogItemModel> log;
 
-    public ProxyLogTableModel()
-    {
+    public ProxyLogTableModel(){
         this.log = new ArrayList<>();
+    }
+    public ProxyLogTableModel(ProxyLogItemModel[] logs)
+    {
+        this.log = Arrays.stream(logs).toList();
     }
 
     @Override
@@ -42,23 +41,23 @@ public class ProxyLogTableModel extends AbstractTableModel
         return switch (column)
                 {
                     case 0 -> "#";
-                    case 1 -> "Request name";
-                    case 2 -> "Host";
-                    case 3 -> "Method";
-                    case 4 -> "URL";
-                    case 5 -> "Param count";
-                    case 6 -> "Status code";
-                    case 7 -> "Response size";
-                    case 8 -> "MIME type";
-                    case 9 -> "Extension";
-                    case 10 -> "Notes";
-                    case 11 -> "TLS";
-                    case 12 -> "Cookies";
-                    case 13 -> "Time";
-                    case 14 -> "Target?";
-                    case 15 -> "Commit?";
-                    case 16 -> "Dup?";
-                    case 17 -> "Sim?";
+                    case 1 -> "Name";
+                    case 2 -> "Target?";
+                    case 3 -> "Commit?";
+                    case 4 -> "Host";
+                    case 5 -> "Method";
+                    case 6 -> "Path";
+                    case 7 -> "Dup?";
+                    case 8 -> "Sim?";
+                    case 9 -> "Params";
+                    case 10 -> "Status";
+                    case 11 -> "Size";
+                    case 12 -> "MIME";
+                    case 13 -> "Ext";
+                    case 14 -> "Notes";
+                    case 15 -> "TLS";
+                    case 16 -> "Cookies";
+                    case 17 -> "Time";
                     default -> "";
                 };
     }
@@ -67,24 +66,12 @@ public class ProxyLogTableModel extends AbstractTableModel
     {
         return switch (column)
                 {
-                    case 0 -> 40;
-                    case 1 -> 200;
-                    case 2 -> 100;
-                    case 3 -> 50;
-                    case 4 -> 300;
-                    case 5 -> 50;
-                    case 6 -> 30;
-                    case 7 -> 40;
-                    case 8 -> 50;
-                    case 9 -> 50;
-                    case 10 -> 50;
-                    case 11 -> 100;
-                    case 12 -> 50;
-                    case 13 -> 30;
-                    case 14 -> 50;
-                    case 15 -> 100;
-                    case 16 -> 75;
-                    case 17 -> 50;
+                    case 0, 14, 15, 16, 17 -> 40;
+                    case 1, 4 -> 200;
+                    case 2, 3, 5 -> 80;
+                    case 6 -> 300;
+                    case 9, 13 -> 70;
+                    case 12 -> 100;
                     default -> 50;
                 };
     }
@@ -98,24 +85,32 @@ public class ProxyLogTableModel extends AbstractTableModel
                 {
                     case 0 -> proxyLogItem.order;
                     case 1 -> proxyLogItem.requestName;
-                    case 2 -> proxyLogItem.host;
-                    case 3 -> proxyLogItem.method;
-                    case 4 -> proxyLogItem.url;
-                    case 5 -> proxyLogItem.paramCount;
-                    case 6 -> proxyLogItem.statusCode;
-                    case 7 -> proxyLogItem.responseSize;
-                    case 8 -> proxyLogItem.mimeType;
-                    case 9 -> proxyLogItem.extension;
-                    case 10 -> proxyLogItem.note;
-                    case 11 -> proxyLogItem.isSecure;
-                    case 12 -> proxyLogItem.cookies;
-                    case 13 -> proxyLogItem.time;
-                    case 14 -> proxyLogItem.isTarget;
-                    case 15 -> proxyLogItem.isCommit;
-                    case 16 -> !proxyLogItem.duplicateRequests.isEmpty();
-                    case 17 -> !proxyLogItem.similarRequests.isEmpty();
+                    case 2 -> proxyLogItem.isTarget();
+                    case 3 -> proxyLogItem.isCommit();
+                    case 4 -> proxyLogItem.getHost();
+                    case 5 -> proxyLogItem.getMethod();
+                    case 6 -> proxyLogItem.getPath();
+                    case 7 -> !proxyLogItem.getDuplicateRequests().isEmpty();
+                    case 8 -> !proxyLogItem.getSimilarRequests().isEmpty();
+                    case 9 -> proxyLogItem.getParamCount();
+                    case 10 -> proxyLogItem.getStatusCode();
+                    case 11 -> proxyLogItem.getResponseSize();
+                    case 12 -> proxyLogItem.getMimeType();
+                    case 13 -> proxyLogItem.getExtension();
+                    case 14 -> proxyLogItem.getNote();
+                    case 15 -> proxyLogItem.isSecure();
+                    case 16 -> proxyLogItem.getCookies().stream().map(c -> c.name()+"="+c.value()).collect(Collectors.joining("; "));
+                    case 17 -> proxyLogItem.getTime();
                     default -> "";
                 };
+    }
+
+    @Override
+    public synchronized void setValueAt(Object value, int row, int column) {
+        switch (column) {
+            case 2 -> getRow(row).setTarget((boolean)value);
+            case 3 -> getRow(row).setCommit((boolean)value);
+        }
     }
 
     public synchronized void add(String requestName, HttpResponseReceived responseReceived)
@@ -125,9 +120,18 @@ public class ProxyLogTableModel extends AbstractTableModel
         fireTableRowsInserted(index, index);
     }
 
+    public synchronized void add(ProxyLogItemModel itemModel) {
+        log.add(itemModel);
+        fireTableRowsInserted(this.getRowCount(), this.getRowCount());
+    }
+
     public synchronized ProxyLogItemModel getRow(int rowIndex)
     {
         return log.get(rowIndex);
+    }
+
+    public synchronized List<ProxyLogItemModel> getAllRows() {
+        return this.log;
     }
 
     public synchronized List<ProxyLogItemModel> getRows(int[] rowIndexes)
@@ -135,6 +139,14 @@ public class ProxyLogTableModel extends AbstractTableModel
         return log.stream().filter(l ->
                 Arrays.stream(rowIndexes).anyMatch(r -> r == l.order))
                 .collect(Collectors.toList());
+    }
+
+    public synchronized void addAllRows(List<ProxyLogItemModel> items) {
+        this.log.addAll(0, items);
+    }
+
+    public synchronized void removeAllRows() {
+        this.log.clear();
     }
 
     public void exportToFile() {
@@ -146,7 +158,7 @@ public class ProxyLogTableModel extends AbstractTableModel
         }
 
         var selectedFile = fileChooser.getSelectedFile();
-        var bin = JsonConverter.convertO2z(new ProxyLogJsonModel(this));
+        var bin = JsonConverter.convertLogToSevenZip(this);
 
         try (var w = new FileOutputStream(selectedFile)) {
             w.write(bin);
@@ -155,8 +167,24 @@ public class ProxyLogTableModel extends AbstractTableModel
         }
     }
 
-    public void importFromFile() {
+    public ProxyLogTableModel importFromFile(MontoyaApi api) {
         // TODO
+        var fileChooser = new JFileChooser();
+        var selected = fileChooser.showOpenDialog(null);
+
+        if (selected != JFileChooser.APPROVE_OPTION) {
+            return this;
+        }
+
+        var selectedFile = fileChooser.getSelectedFile();
+
+        try (var r = new FileInputStream(selectedFile)) {
+            var bin = r.readAllBytes();
+            return JsonConverter.convertSevenZipToLog(bin);
+        } catch (Exception e) {
+            api.logging().logToError(e);
+            return this;
+        }
     }
 }
 

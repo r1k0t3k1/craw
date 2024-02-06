@@ -2,7 +2,9 @@ package main.java.views;
 
 import burp.api.montoya.MontoyaApi;
 import main.java.models.OptionsModel;
+import main.java.models.ProxyLogItemModel;
 import main.java.models.ProxyLogTableModel;
+import main.java.utils.InfoDialog;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -15,6 +17,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
+import java.util.List;
 
 public class MainTab {
     private final MontoyaApi api;
@@ -27,6 +30,7 @@ public class MainTab {
     private final OptionsModel optionsModel;
     private JSplitPane requestResponsePanel;
     private ProxyLogPanel proxyLogPanel;
+    private JFrame dialogFrame;
 
 
     public void toggleIsProxying() {
@@ -48,12 +52,23 @@ public class MainTab {
 
     private void createUIComponents() {
         panel = new JPanel();
+
+        this.dialogFrame = new JFrame();
+        this.dialogFrame.add(new OptionsPanel().$$$getRootComponent$$$());
+        this.dialogFrame.setSize(600, 400);
+        this.dialogFrame.setLocationRelativeTo(null);
+        this.dialogFrame.setVisible(false);
+
         settingButton = new JButton();
         settingButton.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                tableModel.exportToFile();
+                dialogFrame.setVisible(true);
+                //tableModel.exportToFile();
+                //var importedModel = tableModel.importFromFile(api);
+                //tableModel.removeAllRows();
+                //tableModel.addAllRows(importedModel.getAllRows());
+                //tableModel.fireTableRowsInserted(0, tableModel.getRowCount() - 1);
             }
         });
         proxySwitchButton = new JToggleButton();
