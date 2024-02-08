@@ -140,11 +140,10 @@ public class ProxyLogItemModel {
       return this.request.path();
   }
   public int getParamCount() {
-    return this.request.parameters()
+    return (int) this.request.parameters()
             .stream()
             .filter(p -> !p.type().equals(HttpParameterType.COOKIE))
-            .toList()
-            .size();
+            .count();
   }
   public short getStatusCode() {
     return this.response.statusCode();

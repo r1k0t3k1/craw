@@ -40,6 +40,7 @@ public class ProxyLogPanel {
     private void createUIComponents() {
         // TODO: place custom component creation code here
         this.requestResponsePanel = new JSplitPane();
+        this.requestResponsePanel.setResizeWeight(.5);
         this.requestEditor = this.api.userInterface().createHttpRequestEditor();
         this.responseEditor = this.api.userInterface().createHttpResponseEditor();
         this.requestResponsePanel.setLeftComponent(this.requestEditor.uiComponent());
