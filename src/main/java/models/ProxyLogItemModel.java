@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import burp.api.montoya.http.HttpService;
 import burp.api.montoya.http.message.Cookie;
 import burp.api.montoya.http.message.MimeType;
+import burp.api.montoya.http.message.params.HttpParameterType;
 import burp.api.montoya.http.message.requests.HttpRequest;
 import burp.api.montoya.http.message.responses.HttpResponse;
 import burp.api.montoya.http.handler.HttpResponseReceived;
@@ -124,23 +125,26 @@ public class ProxyLogItemModel {
   public String getUrl() {
     return url;
   }
+  public String getUrlExcludeParameters() {
+    var sb = new StringBuilder();
+    try  {
+      var url = new URL(this.url);
+      return url.getProtocol() + "://" + url.getAuthority() + this.request.pathWithoutQuery();
+    }catch (Exception ignored) {};
+      return this.getUrl();
+  }
   public String getMethod() {
     return this.request.method();
   }
   public String getPath() {
-    try {
-      URL url = new URL(this.request.url());
-      return url.getPath();
-    } catch (Exception e) {
-      try {
-        return new URL(this.url).getPath();
-      } catch (Exception e2) {
-        return "";
-      }
-    }
+      return this.request.path();
   }
   public int getParamCount() {
-    return this.request.parameters().size();
+    return this.request.parameters()
+            .stream()
+            .filter(p -> !p.type().equals(HttpParameterType.COOKIE))
+            .toList()
+            .size();
   }
   public short getStatusCode() {
     return this.response.statusCode();

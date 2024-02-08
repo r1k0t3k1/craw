@@ -2,6 +2,7 @@ package main.java.models;
 
 import burp.api.montoya.MontoyaApi;
 import burp.api.montoya.http.handler.HttpResponseReceived;
+import main.java.utils.InfoDialog;
 import main.java.utils.JsonConverter;
 
 import javax.swing.*;
@@ -32,7 +33,7 @@ public class ProxyLogTableModel extends AbstractTableModel
     @Override
     public int getColumnCount()
     {
-        return 19;
+        return 18;
     }
 
     @Override
@@ -116,7 +117,7 @@ public class ProxyLogTableModel extends AbstractTableModel
     public synchronized void add(String requestName, HttpResponseReceived responseReceived)
     {
         int index = log.size();
-        log.add(new ProxyLogItemModel(index+1, requestName, responseReceived));
+        log.add(new ProxyLogItemModel(index, requestName, responseReceived));
         fireTableRowsInserted(index, index);
     }
 
@@ -136,6 +137,7 @@ public class ProxyLogTableModel extends AbstractTableModel
 
     public synchronized List<ProxyLogItemModel> getRows(int[] rowIndexes)
     {
+        // TODO
         return log.stream().filter(l ->
                 Arrays.stream(rowIndexes).anyMatch(r -> r == l.order))
                 .collect(Collectors.toList());
@@ -145,8 +147,28 @@ public class ProxyLogTableModel extends AbstractTableModel
         this.log.addAll(0, items);
     }
 
+    public void removeRow(int index) {
+        if (index >= 0 && index < log.size()) {
+           log.remove(index);
+           fireTableRowsDeleted(index, index);
+        }
+    }
+    public void removeRows(int[] removeRowIndices) {
+        var items = Arrays.stream(removeRowIndices)
+                .distinct()
+                .mapToObj(log::get)
+                .toList();
+
+        removeRows(items);
+    }
+    public void removeRows(List<ProxyLogItemModel> items) {
+        log.removeAll(items);
+        fireTableDataChanged();
+    }
+
     public synchronized void removeAllRows() {
         this.log.clear();
+        fireTableDataChanged();
     }
 
     public void exportToFile() {
@@ -167,7 +189,7 @@ public class ProxyLogTableModel extends AbstractTableModel
         }
     }
 
-    public ProxyLogTableModel importFromFile(MontoyaApi api) {
+    public ProxyLogTableModel importFromFile() {
         // TODO
         var fileChooser = new JFileChooser();
         var selected = fileChooser.showOpenDialog(null);
@@ -182,9 +204,30 @@ public class ProxyLogTableModel extends AbstractTableModel
             var bin = r.readAllBytes();
             return JsonConverter.convertSevenZipToLog(bin);
         } catch (Exception e) {
-            api.logging().logToError(e);
             return this;
         }
+    }
+
+    public String convertSelectedRowsToCsv(int[] selectedRowsIndices) {
+        var items = Arrays.stream(selectedRowsIndices)
+                .distinct()
+                .mapToObj(log::get)
+                .toList();
+
+        StringBuilder sb = new StringBuilder();
+
+        for(ProxyLogItemModel item: items) {
+            sb.append("\"").append(item.isTarget() ? "○" : "×").append("\"").append("\t");
+            sb.append("\"").append(item.getRequestName()).append("\"").append("\t");
+            sb.append("\"").append(item.getMethod()).append("\"").append("\t");
+            //sb.append("\"").append(item.getUrl()).append("\"").append("\t");
+            sb.append("\"").append(item.getUrlExcludeParameters()).append("\"").append("\t");
+            sb.append("\"").append(item.getNote()).append("\"").append("\t");
+            sb.append("\"").append(item.getParamCount()).append("\"").append("\t");
+            sb.append("\"").append(item.isCommit() ? "○" : "×").append("\"").append("\t");
+            sb.append(System.lineSeparator());
+        }
+        return sb.toString();
     }
 }
 

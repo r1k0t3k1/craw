@@ -4,19 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0970236a-7ac1-4dc4-91ab-144492eb1df1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/utils/InfoDialog.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/views/OptionsPanel.form" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/views/OptionsPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+    <list default="true" id="0970236a-7ac1-4dc4-91ab-144492eb1df1" name="Changes" comment="update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/Craw.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Craw.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/models/ProxyLogItemJsonModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/ProxyLogItemJsonModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/ProxyLogItemModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/ProxyLogItemModel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/models/ProxyLogTableModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/models/ProxyLogTableModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/utils/Compresser.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/Compresser.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/utils/JsonConverter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/utils/JsonConverter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/views/MainTab.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/views/MainTab.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/views/OptionsPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/views/OptionsPanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/views/ProxyLogPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/views/ProxyLogPanel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -84,6 +77,19 @@
       <option name="presentableId" value="Default" />
       <updated>1706962264609</updated>
     </task>
+    <task id="LOCAL-00001" summary="update">
+      <option name="closed" value="true" />
+      <created>1707205042838</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1707205042838</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update" />
+    <option name="LAST_COMMIT_MESSAGE" value="update" />
   </component>
 </project>

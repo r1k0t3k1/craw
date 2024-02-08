@@ -54,7 +54,7 @@ public class MainTab {
         panel = new JPanel();
 
         this.dialogFrame = new JFrame();
-        this.dialogFrame.add(new OptionsPanel().$$$getRootComponent$$$());
+        this.dialogFrame.add(new OptionsPanel(this.tableModel).$$$getRootComponent$$$());
         this.dialogFrame.setSize(600, 400);
         this.dialogFrame.setLocationRelativeTo(null);
         this.dialogFrame.setVisible(false);
@@ -64,11 +64,7 @@ public class MainTab {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 dialogFrame.setVisible(true);
-                //tableModel.exportToFile();
-                //var importedModel = tableModel.importFromFile(api);
-                //tableModel.removeAllRows();
-                //tableModel.addAllRows(importedModel.getAllRows());
-                //tableModel.fireTableRowsInserted(0, tableModel.getRowCount() - 1);
+
             }
         });
         proxySwitchButton = new JToggleButton();

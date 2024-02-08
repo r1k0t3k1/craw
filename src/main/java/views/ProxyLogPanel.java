@@ -6,11 +6,14 @@ import burp.api.montoya.ui.editor.HttpResponseEditor;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import main.java.models.ProxyLogTableModel;
+import main.java.utils.InfoDialog;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
@@ -48,8 +51,24 @@ public class ProxyLogPanel {
         this.popupMenu.add(new JMenuItem("Copy URL(scheme://domain)"));
         this.popupMenu.add(new JMenuItem("Copy URL(scheme://domain/path)"));
         this.popupMenu.add(new JMenuItem("Copy URL(scheme://domain/path?q=***)"));
-        this.popupMenu.add(new JMenuItem("Copy as CSV"));
+        this.popupMenu.add(new JMenuItem(new AbstractAction("Copy as CSV") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                var s = tableModel.convertSelectedRowsToCsv(proxyLogTable.getSelectedRows());
+                var ss = new StringSelection(s);
+                clipboard.setContents(ss, ss);
+            }
+        }));
+
         this.popupMenu.add(new JMenuItem("Send to ..."));
+        this.popupMenu.add(new JMenuItem(new AbstractAction("Remove selected rows") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                tableModel.removeRows(proxyLogTable.getSelectedRows());
+            }
+        }));
+
 
         var color = new Color[]{
                 Color.RED,
@@ -120,6 +139,7 @@ public class ProxyLogPanel {
             }
         };
 
+        proxyLogTable.setAutoCreateRowSorter(true);
         for (int i = 0; i < proxyLogTable.getColumnCount(); i++) {
             proxyLogTable.getColumnModel().getColumn(i).setPreferredWidth(tableModel.getColumnWidth(i));
         }
