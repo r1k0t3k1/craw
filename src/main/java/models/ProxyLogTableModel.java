@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class ProxyLogTableModel extends AbstractTableModel
 {
     private final List<ProxyLogItemModel> log;
@@ -138,8 +140,8 @@ public class ProxyLogTableModel extends AbstractTableModel
     public synchronized List<ProxyLogItemModel> getRows(int[] rowIndexes)
     {
         // TODO
-        return log.stream().filter(l ->
-                Arrays.stream(rowIndexes).anyMatch(r -> r == l.order))
+        return IntStream.of(rowIndexes)
+                .mapToObj(log::get)
                 .collect(Collectors.toList());
     }
 

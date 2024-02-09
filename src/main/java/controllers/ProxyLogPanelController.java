@@ -29,8 +29,10 @@ public class ProxyLogPanelController implements HttpHandler {
     @Override
     public ResponseReceivedAction handleHttpResponseReceived(HttpResponseReceived responseReceived) {
         if (this.optionsModel.isProxying) {
-            this.optionsModel.addHistory();
-            this.tableModel.add(this.optionsModel.currentRequestName, responseReceived);
+            if(!responseReceived.initiatingRequest().hasHeader("User-Agent", "BurpSuite-Craw-Extension")) {
+                this.optionsModel.addHistory();
+                this.tableModel.add(this.optionsModel.currentRequestName, responseReceived);
+            }
         }
         return ResponseReceivedAction.continueWith(responseReceived);
     }

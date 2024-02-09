@@ -5,15 +5,16 @@ import burp.api.montoya.ui.editor.HttpRequestEditor;
 import burp.api.montoya.ui.editor.HttpResponseEditor;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import main.java.models.ProxyLogItemModel;
 import main.java.models.ProxyLogTableModel;
 import main.java.utils.InfoDialog;
+import main.java.utils.MultiPartHttpRequestBuilder;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
@@ -62,7 +63,13 @@ public class ProxyLogPanel {
             }
         }));
 
-        this.popupMenu.add(new JMenuItem("Send to ..."));
+        this.popupMenu.add(new JMenuItem(new AbstractAction("Send to ...") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var items = tableModel.getRows(proxyLogTable.getSelectedRows());
+                new MultiPartHttpRequestBuilder(api).setParameter(items).start();
+            }
+        }));
         this.popupMenu.add(new JMenuItem(new AbstractAction("Remove selected rows") {
             @Override
             public void actionPerformed(ActionEvent e) {
