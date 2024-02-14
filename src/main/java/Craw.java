@@ -12,6 +12,7 @@ public class Craw implements BurpExtension {
     public void initialize(MontoyaApi montoyaApi) {
         montoyaApi.extension().setName("Craw");
         montoyaApi.logging().logToOutput("Craw extension loaded successfully.");
+        montoyaApi.logging().logToOutput(String.valueOf(montoyaApi.burpSuite().version()));
 
         ProxyLogTableModel tableModel = new ProxyLogTableModel();
         OptionsModel optionsModel = new OptionsModel();

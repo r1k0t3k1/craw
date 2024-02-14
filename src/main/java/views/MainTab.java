@@ -56,7 +56,7 @@ public class MainTab {
         this.dialogFrame = new JFrame();
         this.dialogFrame.add(new OptionsPanel(this.tableModel).$$$getRootComponent$$$());
         this.dialogFrame.setSize(600, 400);
-        this.dialogFrame.setLocationRelativeTo(null);
+        this.dialogFrame.setLocationRelativeTo(api.userInterface().swingUtils().suiteFrame());
         this.dialogFrame.setVisible(false);
 
         settingButton = new JButton();
