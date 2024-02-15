@@ -27,9 +27,9 @@ public class MainTab {
     private JToggleButton proxySwitchButton;
     private JTable proxyLogTable;
     private ProxyLogTableModel tableModel;
-    private final OptionsModel optionsModel;
     private JSplitPane requestResponsePanel;
     private ProxyLogPanel proxyLogPanel;
+    private OptionsPanel optionsPanel;
     private JFrame dialogFrame;
 
 
@@ -37,16 +37,16 @@ public class MainTab {
         var current = proxySwitchButton.isSelected();
         var text = current ? "Proxying!" : "Passing...";
         proxySwitchButton.setText(text);
-        this.optionsModel.isProxying = current;
+        this.optionsPanel.getOptionsModel().isProxying = current;
     }
 
 
-    public MainTab(MontoyaApi api, ProxyLogTableModel tableModel, OptionsModel optionsModel, ProxyLogPanel proxyLogPanel) {
+    public MainTab(MontoyaApi api, ProxyLogTableModel tableModel, OptionsPanel optionsPanel, ProxyLogPanel proxyLogPanel) {
         this.api = api;
         this.tableModel = tableModel;
-        this.optionsModel = optionsModel;
         this.proxyLogPanel = proxyLogPanel;
-        this.requestNameComboBox = new JComboBox<>(new DefaultComboBoxModel<>(optionsModel.requestNameHistory));
+        this.optionsPanel = optionsPanel;
+        this.requestNameComboBox = new JComboBox<>(new DefaultComboBoxModel<>(optionsPanel.getOptionsModel().requestNameHistory));
         $$$setupUI$$$();
     }
 
@@ -54,7 +54,7 @@ public class MainTab {
         panel = new JPanel();
 
         this.dialogFrame = new JFrame();
-        this.dialogFrame.add(new OptionsPanel(this.tableModel).$$$getRootComponent$$$());
+        this.dialogFrame.add(this.optionsPanel.$$$getRootComponent$$$());
         this.dialogFrame.setSize(600, 400);
         this.dialogFrame.setLocationRelativeTo(api.userInterface().swingUtils().suiteFrame());
         this.dialogFrame.setVisible(false);
@@ -64,7 +64,6 @@ public class MainTab {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 dialogFrame.setVisible(true);
-
             }
         });
         proxySwitchButton = new JToggleButton();
@@ -102,7 +101,7 @@ public class MainTab {
                     return;
                 }
                 try {
-                    optionsModel.currentRequestName = e.getDocument().getText(0, e.getDocument().getLength());
+                    optionsPanel.getOptionsModel().currentRequestName = e.getDocument().getText(0, e.getDocument().getLength());
                 } catch (Exception exception) {
                     return;
                 }

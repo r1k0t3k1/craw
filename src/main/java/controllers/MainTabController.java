@@ -5,24 +5,23 @@ import main.java.models.ProxyLogTableModel;
 import main.java.views.MainTab;
 import burp.api.montoya.MontoyaApi;
 import burp.api.montoya.http.handler.*;
+import main.java.views.OptionsPanel;
 import main.java.views.ProxyLogPanel;
 
 public class MainTabController {
   private final MontoyaApi api;
   private final ProxyLogTableModel tableModel;
-  private final OptionsModel optionsModel;
   private final MainTab mainTab;
 
   public MainTabController(
           MontoyaApi api,
           ProxyLogTableModel tableModel,
-          OptionsModel optionsModel,
+          OptionsPanel optionsPanel,
           ProxyLogPanel proxyLogPanel
   ) {
     this.api = api;
     this.tableModel = tableModel;
-    this.optionsModel = optionsModel;
-    this.mainTab = new MainTab(api, tableModel, optionsModel, proxyLogPanel);
+    this.mainTab = new MainTab(api, tableModel, optionsPanel, proxyLogPanel);
   }
 
   public MainTab getMainTab() {

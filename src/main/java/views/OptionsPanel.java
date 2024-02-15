@@ -2,6 +2,7 @@ package main.java.views;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import main.java.models.OptionsModel;
 import main.java.models.ProxyLogTableModel;
 
 import javax.swing.*;
@@ -12,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class OptionsPanel {
+    private OptionsModel optionsModel;
     private JPanel panel1;
     private JButton exportLogToFileButton;
     private JButton addButton;
@@ -19,13 +21,18 @@ public class OptionsPanel {
     private JTable table1;
     private JButton closeButton;
     private JButton importButton;
-    private JButton button2;
+    public JButton button2;
     private JTextField nameText;
     private ProxyLogTableModel tableModel;
     private DefaultTableModel urlTable;
 
-    public OptionsPanel(ProxyLogTableModel tableModel) {
+    public OptionsModel getOptionsModel() {
+        return optionsModel;
+    }
+
+    public OptionsPanel(ProxyLogTableModel tableModel, OptionsModel optionsModel) {
         this.tableModel = tableModel;
+        this.optionsModel = optionsModel;
         $$$setupUI$$$();
         importButton.addActionListener(new ActionListener() {
             @Override
@@ -49,8 +56,16 @@ public class OptionsPanel {
                 var name = nameText.getText();
                 var url = urlText.getText();
                 if (!name.isEmpty() && !url.isEmpty()) {
-                        urlTable.addRow(new String[]{name, url});
+                    urlTable.addRow(new String[]{name, url});
                 }
+            }
+        });
+        closeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Component component = (Component) e.getSource();
+                JFrame dialogFrame = (JFrame) SwingUtilities.getRoot(component);
+                dialogFrame.setVisible(false);
             }
         });
     }
