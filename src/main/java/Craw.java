@@ -11,7 +11,7 @@ import main.java.utils.InfoDialog;
 import main.java.utils.event.CrawEvent;
 import main.java.utils.event.ICrawEventListener;
 
-public class Craw implements BurpExtension, ICrawEventListener {
+public class Craw implements BurpExtension {
     @Override
     public void initialize(MontoyaApi montoyaApi) {
         montoyaApi.extension().setName("Craw");
@@ -39,10 +39,5 @@ public class Craw implements BurpExtension, ICrawEventListener {
 
         montoyaApi.http().registerHttpHandler(proxyLogPanelController);
         montoyaApi.userInterface().registerSuiteTab("Craw", mainTabController.getMainTab().$$$getRootComponent$$$());
-    }
-
-    @Override
-    public void onCrawEvent(CrawEvent crawEvent) {
-
     }
 }
